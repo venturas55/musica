@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <title>Estudiar Musica</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="./css/style.css">
+    <link rel="shortcut icon" href="#" />
+</head>
+
+<body>
+    <div id="app">
+
+        <!-- HEADER -->
+        <header class="cabecera contenedorFlex">
+            <h1> ESTUDIO PARA TUBA/TROMPETA</h1>
+            <button class="item" @click="verOpciones=true">OPCIONES</button>
+        </header>
+
+        <!-- BODY -->
+        <div class="contenedor">
+            <div class="contenedorFlex">
+                <button v-if="!practicando" class="item" @click="comenzar()">COMENZAR PRACTICA</button>
+                <button v-else class="item" @click="parar()">DETENER PRACTICA</button>
+            </div>
+
+            <div id="flip-container" @click="rota()">
+                <div class="ficha" v-bind:class="{rotated: !caraA}" class="card">
+                    <div class="front">
+                        <img id="nota" :src="'./img/'+ficha.tipo+'.png'" alt="">
+                    </div>
+                    <div class="back">
+                        {{ficha.palabra}}
+                    </div>
+                </div>
+            </div>
+
+            <div class="contenedorFlex" v-if="!practicando">
+                <button class="item" @click="mostrarFicha()">SIGUIENTE NOTA</button>
+            </div>
+        </div>
+
+        <!-- MODAL OPCIONES -->
+        <div class="contenedorModal" v-show="verOpciones">
+            <div class="header">
+                <button class="close" @click="verOpciones=false">X</button>
+                <h1>OPCIONES</h1>
+            </div>
+            <div class="contenido">
+                <div class="item">
+                    <span>Establecer Rango: </span>
+                    <span>Mín</span>
+                    <select v-model="indiceNotaInferior" name="indiceNotaInferior" id="indiceNotaInferior"></select>
+                    <span>Máx</span>
+                    <select v-model="indiceNotaSuperior" name="indiceNotaSuperior" id="indiceNotaSuperior"></select>
+                </div>
+                <div class="slidecontainer item">
+                    <label for="myRange"> Seleccione tiempo:</label>
+                    <input type="range" v-model="tiempo" min="1" max="10" step="0.5" class="slider" id="myRange">
+                    <span> {{tiempo}} s</span>
+                </div>
+                <button @click="guardarOpciones()">GUARDAR</button>
+                <button @click="verOpciones=false">CANCELAR</button>
+            </div>
+        </div>
+
+        <!-- FOOTER -->
+        <footer class="footer">Adrian de Haro Ortega. <span class="copyleft"> &copy; </span> Practica trompeta 2020 · Todos los derechos reservados</footer>
+
+
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
+    <script>
+        var app = new Vue({
+            el: "#app",
+            data: {
+                practicando: false,
+                caraA: true,
+                id: "",
+                indiceNotaInferior: 1,
+                indiceNotaSuperior: 61,
+                tiempo: 5,
+                listado: [{
+                    indice: 1,
+                    palabra: 'DO 0',
+                    tipo: 'C1',
+                    frecuencia: 32.70
+                }, {
+                    indice: 2,
+                    palabra: 'C#1',
+                    tipo: 'Cs1',
+                    frecuencia: 34.65
+                }, {
+                    indice: 3,
+                    palabra: 'D1',
+                    tipo: 'D1',
+                    frecuencia: 36.71
+                }, {
+                    indice: 4,
+                    palabra: 'Eb1',
+                    tipo: 'Eb1',
+                    frecuencia: 38.89
+                }, {
+                    indice: 5,
+                    palabra: 'E1',
+                    tipo: 'E1',
+                    frecuencia: 41.20
+                }, {
+                    indice: 6,
+                    palabra: 'F1',
+                    tipo: 'F1',
+                    frecuencia: 43.65
+                }, {
+                    indice: 7,
+                    palabra: 'F#1',
+                    tipo: 'Fs1',
+                    frecuencia: 46.25
+                }, {
+                    indice: 8,
+                    palabra: 'G1',
+                    tipo: 'G1',
+                    frecuencia: 49.00
+                }, {
+                    indice: 9,
+                    palabra: 'G#1',
+                    tipo: 'Gs1',
+                    frecuencia: 51.91
+                }, {
+                    indice: 10,
+                    palabra: 'LA 1-2',
+                    tipo: 'A1',
+                    frecuencia: 55.00
+                }, {
+                    indice: 11,
+                    palabra: 'SIb 1',
+                    tipo: 'Bb1',
+                    frecuencia: 58.27
+                }, {
+                    indice: 12,
+                    palabra: 'SI 2',
+                    tipo: 'B1',
+                    frecuencia: 61.74
+                }, {
+                    indice: 13,
+                    palabra: 'DO 0',
+                    tipo: 'C2',
+                    frecuencia: 65.41
+                }, {
+                    indice: 14,
+                    palabra: 'DO#',
+                    tipo: 'Cs2',
+                    frecuencia: 69.30
+                }, {
+                    indice: 15,
+                    palabra: 'RE',
+                    tipo: 'D2',
+                    frecuencia: 73.42
+                }, {
+                    indice: 16,
+                    palabra: 'MI b',
+                    tipo: 'Eb2',
+                    frecuencia: 77.78
+                }, {
+                    indice: 17,
+                    palabra: 'MI  ',
+                    tipo: 'E2',
+                    frecuencia: 82.41
+                }, {
+                    indice: 18,
+                    palabra: 'FA 1',
+                    tipo: 'F2',
+                    frecuencia: 87.31
+                }, {
+                    indice: 19,
+                    palabra: 'FA# 2',
+                    tipo: 'Fs2',
+                    frecuencia: 92.50
+                }, {
+                    indice: 20,
+                    palabra: 'SOL 0',
+                    tipo: 'G2',
+                    frecuencia: 98.00
+                }, {
+                    indice: 21,
+                    palabra: 'G#2',
+                    tipo: 'Gs2',
+                    frecuencia: 103.8
+                }, {
+                    indice: 22,
+                    palabra: 'A2',
+                    tipo: 'A2',
+                    frecuencia: 110.0
+                }, {
+                    indice: 23,
+                    palabra: 'SIb 1',
+                    tipo: 'Bb2',
+                    frecuencia: 116.5
+                }, {
+                    indice: 24,
+                    palabra: 'SI 2',
+                    tipo: 'B2',
+                    frecuencia: 123.5
+                }, {
+                    indice: 25,
+                    palabra: 'DO 0',
+                    tipo: 'C3',
+                    frecuencia: 130.8
+                }, {
+                    indice: 26,
+                    palabra: 'DO#',
+                    tipo: 'Cs3',
+                    frecuencia: 138.6
+                }, {
+                    indice: 27,
+                    palabra: 'RE',
+                    tipo: 'D3',
+                    frecuencia: 146.8
+                }, {
+                    indice: 28,
+                    palabra: 'Eb3',
+                    tipo: 'Eb3',
+                    frecuencia: 155.6
+                }, {
+                    indice: 29,
+                    palabra: 'E3',
+                    tipo: 'E3',
+                    frecuencia: 164.8
+                }, {
+                    indice: 30,
+                    palabra: 'F3',
+                    tipo: 'F3',
+                    frecuencia: 174.6
+                }, {
+                    indice: 31,
+                    palabra: 'F#3',
+                    tipo: 'Fs3',
+                    frecuencia: 185.0
+                }, {
+                    indice: 32,
+                    palabra: 'G3',
+                    tipo: 'G3',
+                    frecuencia: 196.0
+                }, {
+                    indice: 33,
+                    palabra: 'G#3',
+                    tipo: 'Gs3',
+                    frecuencia: 207.7
+                }, {
+                    indice: 34,
+                    palabra: 'A3',
+                    tipo: 'A3',
+                    frecuencia: 220.0
+                }, {
+                    indice: 35,
+                    palabra: 'Bb3',
+                    tipo: 'Bb3',
+                    frecuencia: 233.1
+                }, {
+                    indice: 36,
+                    palabra: 'B3',
+                    tipo: 'B3',
+                    frecuencia: 246.9
+                }, {
+                    indice: 37,
+                    palabra: 'C4',
+                    tipo: 'C4',
+                    frecuencia: 261.6
+                }, {
+                    indice: 38,
+                    palabra: 'C#4',
+                    tipo: 'Cs4',
+                    frecuencia: 277.2
+                }, {
+                    indice: 39,
+                    palabra: 'D4',
+                    tipo: 'D4',
+                    frecuencia: 293.7
+                }, {
+                    indice: 40,
+                    palabra: 'Eb4',
+                    tipo: 'Eb4',
+                    frecuencia: 311.1
+                }, {
+                    indice: 41,
+                    palabra: 'E4',
+                    tipo: 'E4',
+                    frecuencia: 329.6
+                }, {
+                    indice: 42,
+                    palabra: 'F4',
+                    tipo: 'F4',
+                    frecuencia: 349.2
+                }, {
+                    indice: 43,
+                    palabra: 'F#4',
+                    tipo: 'Fs4',
+                    frecuencia: 370.0
+                }, {
+                    indice: 44,
+                    palabra: 'G4',
+                    tipo: 'G4',
+                    frecuencia: 392.0
+                }, {
+                    indice: 45,
+                    palabra: 'G#4',
+                    tipo: 'Gs4',
+                    frecuencia: 415.3
+                }, {
+                    indice: 46,
+                    palabra: 'A4',
+                    tipo: 'A4',
+                    frecuencia: 440.0
+                }, {
+                    indice: 47,
+                    palabra: 'Bb4',
+                    tipo: 'Bb4',
+                    frecuencia: 466.2
+                }, {
+                    indice: 48,
+                    palabra: 'B4',
+                    tipo: 'B4',
+                    frecuencia: 493.9
+                }, {
+                    indice: 49,
+                    palabra: 'C5',
+                    tipo: 'C5',
+                    frecuencia: 523.3
+                }, {
+                    indice: 50,
+                    palabra: 'C#5',
+                    tipo: 'Cs5',
+                    frecuencia: 554.4
+                }, {
+                    indice: 51,
+                    palabra: 'D5',
+                    tipo: 'D5',
+                    frecuencia: 587.3
+                }, {
+                    indice: 52,
+                    palabra: 'Eb5',
+                    tipo: 'Eb5',
+                    frecuencia: 622.3
+                }, {
+                    indice: 53,
+                    palabra: 'E5',
+                    tipo: 'E5',
+                    frecuencia: 659.3
+                }, {
+                    indice: 54,
+                    palabra: 'F5',
+                    tipo: 'F5',
+                    frecuencia: 698.5
+                }, {
+                    indice: 55,
+                    palabra: 'F#5',
+                    tipo: 'Fs5',
+                    frecuencia: 740.0
+                }, {
+                    indice: 56,
+                    palabra: 'G5',
+                    tipo: 'G5',
+                    frecuencia: 784.0
+                }, {
+                    indice: 57,
+                    palabra: 'G#5',
+                    tipo: 'Gs5',
+                    frecuencia: 830.6
+                }, {
+                    indice: 58,
+                    palabra: 'A5',
+                    tipo: 'A5',
+                    frecuencia: 880.0
+                }, {
+                    indice: 59,
+                    palabra: 'Bb5',
+                    tipo: 'Bb5',
+                    frecuencia: 932.3
+                }, {
+                    indice: 60,
+                    palabra: 'B5',
+                    tipo: 'B5',
+                    frecuencia: 987.8
+                }, {
+                    indice: 61,
+                    palabra: 'C6',
+                    tipo: 'C6',
+                    frecuencia: 1047
+                }, ],
+                ficha: "",
+                verOpciones: true,
+            },
+            mounted: function() {
+                var sel = document.getElementById('indiceNotaInferior');
+                this.listado.forEach(item => {
+                    var opt = document.createElement('option');
+                    opt.appendChild(document.createTextNode(item.tipo));
+                    opt.value = item.indice;
+                    sel.appendChild(opt);
+                });
+
+                sel = document.getElementById('indiceNotaSuperior');
+                this.listado.forEach(item => {
+                    var opt = document.createElement('option');
+                    opt.appendChild(document.createTextNode(item.tipo));
+                    opt.value = item.indice;
+                    sel.appendChild(opt);
+                });
+
+                this.ficha = this.listado[12];
+                this.verOpciones = false;
+                this.cargarOpciones();
+            },
+            computed: {
+                tiempoms: function() {
+                    return this.tiempo * 1000;
+                }
+            },
+            methods: {
+                mostrarFicha: function() {
+                    this.ficha = this.listado[this.aleatorio()];
+                },
+                rota: function() {
+                    app.caraA = !app.caraA;
+                },
+                comenzar: function() {
+                    app.practicando = true;
+                    app.id = setInterval(function() {
+                            app.rotacion()
+                        }, app.tiempoms) //app.funcion() ha de llevar los PARENTESIS!!!
+                },
+                parar: function() {
+                    clearInterval(app.id);
+                    app.practicando = false;
+                    //alert("Finaliza el ejercicio");
+                },
+                aleatorio: function() {
+                    return Math.floor(Math.random() * (this.indiceNotaSuperior - this.indiceNotaInferior)) + this.indiceNotaInferior;
+                },
+                rotacion: function() {
+                    id0 = setTimeout(function() {
+                        app.mostrarFicha()
+                    }, app.tiempoms * 0.03); // Añado un retardo al mostrar la nueva ficha, para que no se vea mientras gira por segunda vez
+                    id1 = setTimeout(function() {
+                        app.rota()
+                    }, app.tiempoms * 0.8); //Al 80% del tiempo definido rota una vez
+                    id3 = setTimeout(function() {
+                        app.reproducir()
+                    }, app.tiempoms * 0.8); //Al 80% del tiempo definido empieza a sonar
+                    id2 = setTimeout(function() {
+                        app.rota()
+                    }, app.tiempoms * 0.99); //Al 99% del tiempo definido rota por segunda vez para volver a su estado original
+                },
+
+                reproducir: function() {
+                    var flag = false;
+
+                    frequency = app.ficha.frecuencia;
+                    console.log("Nota: " + app.ficha.tipo + " " + frequency + "Hz " + flag);
+
+                    var context = new AudioContext();
+                    o1 = context.createOscillator();
+                    g1 = context.createGain();
+                    o1.connect(g1);
+                    g1.connect(context.destination);
+                    o1.frequency.value = frequency;
+                    o1.start(0);
+                    tiempoapagado = app.tiempoms * 0.0002;
+                    o1.stop(context.currentTime + tiempoapagado);
+                },
+                guardarOpciones: function() {
+                    localStorage.setItem("notaMinima", this.indiceNotaInferior);
+                    localStorage.setItem("notaMaxima", this.indiceNotaSuperior);
+                    localStorage.setItem("tiempo", this.tiempo);
+                },
+                cargarOpciones: function() {
+                    if (localStorage.getItem("notaMinima") != null)
+                        this.indiceNotaInferior = localStorage.getItem("notaMinima");
+                    else
+                        this.indiceNotaInferior = 11;
+
+                    if (localStorage.getItem("notaMaxima") != null)
+                        this.indiceNotaSuperior = localStorage.getItem("notaMaxima");
+                    else
+                        this.indiceNotaSuperior = 25;
+
+                    if (localStorage.getItem("tiempo") != null)
+                        this.tiempo = localStorage.getItem("tiempo");
+                    else
+                        this.tiempo = 5;
+                }
+            }
+        })
+    </script>
+
+
+</body>
+
+</html>
