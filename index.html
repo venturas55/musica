@@ -67,7 +67,7 @@
                     </select>
 
                 </div>
-
+                <button @click="cargarOpciones()">CARGAR</button>
                 <button @click="guardarOpciones()">GUARDAR</button>
                 <button @click="verOpciones=false">CANCELAR</button>
             </div>
@@ -553,30 +553,32 @@
                     o1.stop(context.currentTime + tiempoapagado);
                 },
                 guardarOpciones: function() {
-                    localStorage.setItem("notaMinima", this.indiceNotaInferior);
-                    localStorage.setItem("notaMaxima", this.indiceNotaSuperior);
-                    localStorage.setItem("tiempo", this.tiempo);
-                    localStorage.setItem("afinacion", this.afinacion);
+                    const miConfiguracion = {
+                        notaMinima: this.indiceNotaInferior,
+                        notaMaxima: this.indiceNotaSuperior,
+                        tiempo: this.tiempo,
+                        afinacion: this.afinacion
+                    }
+
+                    localStorage.setItem("miConfiguracion", JSON.stringify(miConfiguracion));
+                    this.verOpciones = false;
+                    console.log("Opciones guardadas con éxito");
                 },
                 cargarOpciones: function() {
-                    if (localStorage.getItem("notaMinima") != null)
-                        this.indiceNotaInferior = parseInt(localStorage.getItem("notaMinima"));
-                    else
+                    var miObjeto = JSON.parse(localStorage.getItem("miConfiguracion"));
+                    console.log(miObjeto);
+                    if (miObjeto != null) {
+
+                        this.indiceNotaInferior = parseInt(miObjeto.notaMinima);
+                        this.indiceNotaSuperior = parseInt(miObjeto.notaMaxima);
+                        this.tiempo = parseFloat(miObjeto.tiempo);
+                        this.afinacion = parseInt(miObjeto.afinacion);
+                    } else {
                         this.indiceNotaInferior = 11;
-
-                    if (localStorage.getItem("notaMaxima") != null)
-                        this.indiceNotaSuperior = parseInt(localStorage.getItem("notaMaxima"));
-                    else
                         this.indiceNotaSuperior = 25;
-
-                    if (localStorage.getItem("tiempo") != null)
-                        this.tiempo = parseFloat(localStorage.getItem("tiempo"));
-                    else
                         this.tiempo = 5;
-                    if (localStorage.getItem("afinacion") != null)
-                        this.afinacion = localStorage.getItem("afinacion");
-                    else
                         this.afinacion = 13;
+                    }
                 }
             }
         })
