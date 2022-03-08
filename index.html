@@ -30,7 +30,7 @@
                         <img id="nota" :src="'./img/'+ficha.tipo+'.png'" alt="">
                     </div>
                     <div class="back">
-                        {{ficha.palabra}}
+                        {{ficha.digitacionDO}}
                     </div>
                 </div>
             </div>
@@ -59,6 +59,15 @@
                     <input type="range" v-model="tiempo" min="1" max="10" step="0.5" class="slider" id="myRange">
                     <span> {{tiempo}} s</span>
                 </div>
+                <div class="item">
+                    <span>Afinacion: </span>
+                    <select v-model="afinacion" name="afinacion" id="afinacion">
+                        <option value="13">DO</option>
+                        <option value="11">SI bemol</option>
+                    </select>
+
+                </div>
+
                 <button @click="guardarOpciones()">GUARDAR</button>
                 <button @click="verOpciones=false">CANCELAR</button>
             </div>
@@ -82,312 +91,386 @@
                 tiempo: 5,
                 listado: [{
                     indice: 1,
-                    palabra: 'DO 0',
+                    digitacionDO: 'DO 0',
+                    digitacionSIb: '?',
                     tipo: 'C1',
                     frecuencia: 32.70
                 }, {
                     indice: 2,
-                    palabra: 'C#1',
+                    digitacionDO: 'C#1',
+                    digitacionSIb: '?',
                     tipo: 'Cs1',
                     frecuencia: 34.65
                 }, {
                     indice: 3,
-                    palabra: 'D1',
+                    digitacionDO: 'D1',
+                    digitacionSIb: '?',
                     tipo: 'D1',
                     frecuencia: 36.71
                 }, {
                     indice: 4,
-                    palabra: 'Eb1',
+                    digitacionDO: 'Eb1',
+                    digitacionSIb: '?',
                     tipo: 'Eb1',
                     frecuencia: 38.89
                 }, {
                     indice: 5,
-                    palabra: 'E1',
+                    digitacionDO: 'E1',
+                    digitacionSIb: '?',
                     tipo: 'E1',
                     frecuencia: 41.20
                 }, {
                     indice: 6,
-                    palabra: 'F1',
+                    digitacionDO: 'F1',
+                    digitacionSIb: '?',
                     tipo: 'F1',
                     frecuencia: 43.65
                 }, {
                     indice: 7,
-                    palabra: 'F#1',
+                    digitacionDO: 'F#1',
+                    digitacionSIb: '?',
                     tipo: 'Fs1',
                     frecuencia: 46.25
                 }, {
                     indice: 8,
-                    palabra: 'G1',
+                    digitacionDO: 'G1',
+                    digitacionSIb: '?',
                     tipo: 'G1',
                     frecuencia: 49.00
                 }, {
                     indice: 9,
-                    palabra: 'G#1',
+                    digitacionDO: 'G#1',
+                    digitacionSIb: '?',
                     tipo: 'Gs1',
                     frecuencia: 51.91
                 }, {
                     indice: 10,
-                    palabra: 'LA 1-2',
+                    digitacionDO: 'LA 1-2',
+                    digitacionSIb: '?',
                     tipo: 'A1',
                     frecuencia: 55.00
                 }, {
                     indice: 11,
-                    palabra: 'SIb 1',
+                    digitacionDO: 'SIb 1',
+                    digitacionSIb: '?',
                     tipo: 'Bb1',
                     frecuencia: 58.27
                 }, {
                     indice: 12,
-                    palabra: 'SI 2',
+                    digitacionDO: 'SI 2',
+                    digitacionSIb: '?',
                     tipo: 'B1',
                     frecuencia: 61.74
                 }, {
                     indice: 13,
-                    palabra: 'DO 0',
+                    digitacionDO: 'DO 0',
+                    digitacionSIb: '?',
                     tipo: 'C2',
                     frecuencia: 65.41
                 }, {
                     indice: 14,
-                    palabra: 'DO#',
+                    digitacionDO: 'DO#',
+                    digitacionSIb: '?',
                     tipo: 'Cs2',
                     frecuencia: 69.30
                 }, {
                     indice: 15,
-                    palabra: 'RE',
+                    digitacionDO: 'RE b',
+                    digitacionSIb: '?',
+                    tipo: 'Db2',
+                    frecuencia: 69.30
+                }, {
+                    indice: 16,
+                    digitacionDO: 'RE',
+                    digitacionSIb: '?',
                     tipo: 'D2',
                     frecuencia: 73.42
                 }, {
-                    indice: 16,
-                    palabra: 'MI b',
+                    indice: 17,
+                    digitacionDO: 'RE#',
+                    digitacionSIb: '?',
+                    tipo: 'Ds2',
+                    frecuencia: 77.78
+                }, {
+                    indice: 18,
+                    digitacionDO: 'MI b',
+                    digitacionSIb: '?',
                     tipo: 'Eb2',
                     frecuencia: 77.78
                 }, {
-                    indice: 17,
-                    palabra: 'MI  ',
+                    indice: 19,
+                    digitacionDO: 'MI  1-2',
+                    digitacionSIb: '?',
                     tipo: 'E2',
                     frecuencia: 82.41
                 }, {
-                    indice: 18,
-                    palabra: 'FA 1',
+                    indice: 20,
+                    digitacionDO: 'FA 1',
+                    digitacionSIb: '?',
                     tipo: 'F2',
                     frecuencia: 87.31
                 }, {
-                    indice: 19,
-                    palabra: 'FA# 2',
+                    indice: 21,
+                    digitacionDO: 'FA# 2',
+                    digitacionSIb: '?',
                     tipo: 'Fs2',
                     frecuencia: 92.50
                 }, {
-                    indice: 20,
-                    palabra: 'SOL 0',
+                    indice: 22,
+                    digitacionDO: 'SOL 0',
+                    digitacionSIb: '?',
                     tipo: 'G2',
                     frecuencia: 98.00
                 }, {
-                    indice: 21,
-                    palabra: 'G#2',
+                    indice: 23,
+                    digitacionDO: 'SOL#',
+                    digitacionSIb: '?',
                     tipo: 'Gs2',
                     frecuencia: 103.8
                 }, {
-                    indice: 22,
-                    palabra: 'A2',
+                    indice: 24,
+                    digitacionDO: 'LA 1-2',
+                    digitacionSIb: '?',
                     tipo: 'A2',
                     frecuencia: 110.0
                 }, {
-                    indice: 23,
-                    palabra: 'SIb 1',
+                    indice: 25,
+                    digitacionDO: 'SIb 1',
+                    digitacionSIb: '?',
                     tipo: 'Bb2',
                     frecuencia: 116.5
                 }, {
-                    indice: 24,
-                    palabra: 'SI 2',
+                    indice: 26,
+                    digitacionDO: 'SI 2',
+                    digitacionSIb: '?',
                     tipo: 'B2',
                     frecuencia: 123.5
                 }, {
-                    indice: 25,
-                    palabra: 'DO 0',
+                    indice: 27,
+                    digitacionDO: 'DO 0',
+                    digitacionSIb: '?',
                     tipo: 'C3',
                     frecuencia: 130.8
                 }, {
-                    indice: 26,
-                    palabra: 'DO#',
+                    indice: 28,
+                    digitacionDO: 'DO#',
+                    digitacionSIb: '?',
                     tipo: 'Cs3',
                     frecuencia: 138.6
                 }, {
-                    indice: 27,
-                    palabra: 'RE',
+                    indice: 29,
+                    digitacionDO: 'RE',
+                    digitacionSIb: '?',
                     tipo: 'D3',
                     frecuencia: 146.8
                 }, {
-                    indice: 28,
-                    palabra: 'Eb3',
+                    indice: 30,
+                    digitacionDO: 'Eb3',
+                    digitacionSIb: '?',
                     tipo: 'Eb3',
                     frecuencia: 155.6
                 }, {
-                    indice: 29,
-                    palabra: 'E3',
+                    indice: 31,
+                    digitacionDO: 'MI  1-2',
+                    digitacionSIb: '?',
                     tipo: 'E3',
                     frecuencia: 164.8
                 }, {
-                    indice: 30,
-                    palabra: 'F3',
+                    indice: 32,
+                    digitacionDO: 'F3',
+                    digitacionSIb: '?',
                     tipo: 'F3',
                     frecuencia: 174.6
                 }, {
-                    indice: 31,
-                    palabra: 'F#3',
+                    indice: 33,
+                    digitacionDO: 'F#3',
+                    digitacionSIb: '?',
                     tipo: 'Fs3',
                     frecuencia: 185.0
                 }, {
-                    indice: 32,
-                    palabra: 'G3',
+                    indice: 34,
+                    digitacionDO: 'G3',
+                    digitacionSIb: '?',
                     tipo: 'G3',
                     frecuencia: 196.0
                 }, {
-                    indice: 33,
-                    palabra: 'G#3',
+                    indice: 35,
+                    digitacionDO: 'G#3',
+                    digitacionSIb: '?',
                     tipo: 'Gs3',
                     frecuencia: 207.7
                 }, {
-                    indice: 34,
-                    palabra: 'A3',
+                    indice: 36,
+                    digitacionDO: 'A3',
+                    digitacionSIb: '?',
                     tipo: 'A3',
                     frecuencia: 220.0
                 }, {
-                    indice: 35,
-                    palabra: 'Bb3',
+                    indice: 37,
+                    digitacionDO: 'Bb3',
+                    digitacionSIb: '?',
                     tipo: 'Bb3',
                     frecuencia: 233.1
                 }, {
-                    indice: 36,
-                    palabra: 'B3',
+                    indice: 38,
+                    digitacionDO: 'B3',
+                    digitacionSIb: '?',
                     tipo: 'B3',
                     frecuencia: 246.9
                 }, {
-                    indice: 37,
-                    palabra: 'C4',
+                    indice: 39,
+                    digitacionDO: 'C4',
+                    digitacionSIb: '?',
                     tipo: 'C4',
                     frecuencia: 261.6
                 }, {
-                    indice: 38,
-                    palabra: 'C#4',
+                    indice: 40,
+                    digitacionDO: 'C#4',
+                    digitacionSIb: '?',
                     tipo: 'Cs4',
                     frecuencia: 277.2
                 }, {
-                    indice: 39,
-                    palabra: 'D4',
+                    indice: 41,
+                    digitacionDO: 'D4',
+                    digitacionSIb: '?',
                     tipo: 'D4',
                     frecuencia: 293.7
                 }, {
-                    indice: 40,
-                    palabra: 'Eb4',
+                    indice: 42,
+                    digitacionDO: 'Eb4',
+                    digitacionSIb: '?',
                     tipo: 'Eb4',
                     frecuencia: 311.1
                 }, {
-                    indice: 41,
-                    palabra: 'E4',
+                    indice: 43,
+                    digitacionDO: 'MI  1-2',
+                    digitacionSIb: '?',
                     tipo: 'E4',
                     frecuencia: 329.6
                 }, {
-                    indice: 42,
-                    palabra: 'F4',
+                    indice: 44,
+                    digitacionDO: 'F4',
+                    digitacionSIb: '?',
                     tipo: 'F4',
                     frecuencia: 349.2
                 }, {
-                    indice: 43,
-                    palabra: 'F#4',
+                    indice: 45,
+                    digitacionDO: 'F#4',
+                    digitacionSIb: '?',
                     tipo: 'Fs4',
                     frecuencia: 370.0
                 }, {
-                    indice: 44,
-                    palabra: 'G4',
+                    indice: 46,
+                    digitacionDO: 'G4',
+                    digitacionSIb: '?',
                     tipo: 'G4',
                     frecuencia: 392.0
                 }, {
-                    indice: 45,
-                    palabra: 'G#4',
+                    indice: 47,
+                    digitacionDO: 'G#4',
+                    digitacionSIb: '?',
                     tipo: 'Gs4',
                     frecuencia: 415.3
                 }, {
-                    indice: 46,
-                    palabra: 'A4',
+                    indice: 48,
+                    digitacionDO: 'A4',
+                    digitacionSIb: '?',
                     tipo: 'A4',
                     frecuencia: 440.0
                 }, {
-                    indice: 47,
-                    palabra: 'Bb4',
+                    indice: 49,
+                    digitacionDO: 'Bb4',
+                    digitacionSIb: '?',
                     tipo: 'Bb4',
                     frecuencia: 466.2
                 }, {
-                    indice: 48,
-                    palabra: 'B4',
+                    indice: 50,
+                    digitacionDO: 'B4',
+                    digitacionSIb: '?',
                     tipo: 'B4',
                     frecuencia: 493.9
                 }, {
-                    indice: 49,
-                    palabra: 'C5',
+                    indice: 51,
+                    digitacionDO: 'C5',
+                    digitacionSIb: '?',
                     tipo: 'C5',
                     frecuencia: 523.3
                 }, {
-                    indice: 50,
-                    palabra: 'C#5',
+                    indice: 52,
+                    digitacionDO: 'C#5',
+                    digitacionSIb: '?',
                     tipo: 'Cs5',
                     frecuencia: 554.4
                 }, {
-                    indice: 51,
-                    palabra: 'D5',
+                    indice: 53,
+                    digitacionDO: 'D5',
+                    digitacionSIb: '?',
                     tipo: 'D5',
                     frecuencia: 587.3
                 }, {
-                    indice: 52,
-                    palabra: 'Eb5',
+                    indice: 54,
+                    digitacionDO: 'Eb5',
+                    digitacionSIb: '?',
                     tipo: 'Eb5',
                     frecuencia: 622.3
                 }, {
-                    indice: 53,
-                    palabra: 'E5',
+                    indice: 55,
+                    digitacionDO: 'MI  1-2',
+                    digitacionSIb: '?',
                     tipo: 'E5',
                     frecuencia: 659.3
                 }, {
-                    indice: 54,
-                    palabra: 'F5',
+                    indice: 56,
+                    digitacionDO: 'F5',
+                    digitacionSIb: '?',
                     tipo: 'F5',
                     frecuencia: 698.5
                 }, {
-                    indice: 55,
-                    palabra: 'F#5',
+                    indice: 57,
+                    digitacionDO: 'F#5',
+                    digitacionSIb: '?',
                     tipo: 'Fs5',
                     frecuencia: 740.0
                 }, {
-                    indice: 56,
-                    palabra: 'G5',
+                    indice: 58,
+                    digitacionDO: 'G5',
+                    digitacionSIb: '?',
                     tipo: 'G5',
                     frecuencia: 784.0
                 }, {
-                    indice: 57,
-                    palabra: 'G#5',
+                    indice: 59,
+                    digitacionDO: 'G#5',
+                    digitacionSIb: '?',
                     tipo: 'Gs5',
                     frecuencia: 830.6
                 }, {
-                    indice: 58,
-                    palabra: 'A5',
+                    indice: 60,
+                    digitacionDO: 'A5',
+                    digitacionSIb: '?',
                     tipo: 'A5',
                     frecuencia: 880.0
                 }, {
-                    indice: 59,
-                    palabra: 'Bb5',
+                    indice: 61,
+                    digitacionDO: 'Bb5',
+                    digitacionSIb: '?',
                     tipo: 'Bb5',
                     frecuencia: 932.3
                 }, {
-                    indice: 60,
-                    palabra: 'B5',
+                    indice: 62,
+                    digitacionDO: 'B5',
+                    digitacionSIb: '?',
                     tipo: 'B5',
                     frecuencia: 987.8
                 }, {
-                    indice: 61,
-                    palabra: 'C6',
+                    indice: 63,
+                    digitacionDO: 'C6',
+                    digitacionSIb: '?',
                     tipo: 'C6',
                     frecuencia: 1047
                 }, ],
                 ficha: "",
                 verOpciones: true,
+                afinacion: "",
             },
             mounted: function() {
                 var sel = document.getElementById('indiceNotaInferior');
@@ -434,7 +517,9 @@
                     //alert("Finaliza el ejercicio");
                 },
                 aleatorio: function() {
-                    return Math.floor(Math.random() * (this.indiceNotaSuperior - this.indiceNotaInferior)) + this.indiceNotaInferior;
+                    var numero = (Math.floor(Math.random() * (this.indiceNotaSuperior - this.indiceNotaInferior)) + this.indiceNotaInferior);
+                    console.log(numero);
+                    return numero;
                 },
                 rotacion: function() {
                     id0 = setTimeout(function() {
@@ -471,22 +556,27 @@
                     localStorage.setItem("notaMinima", this.indiceNotaInferior);
                     localStorage.setItem("notaMaxima", this.indiceNotaSuperior);
                     localStorage.setItem("tiempo", this.tiempo);
+                    localStorage.setItem("afinacion", this.afinacion);
                 },
                 cargarOpciones: function() {
                     if (localStorage.getItem("notaMinima") != null)
-                        this.indiceNotaInferior = localStorage.getItem("notaMinima");
+                        this.indiceNotaInferior = parseInt(localStorage.getItem("notaMinima"));
                     else
                         this.indiceNotaInferior = 11;
 
                     if (localStorage.getItem("notaMaxima") != null)
-                        this.indiceNotaSuperior = localStorage.getItem("notaMaxima");
+                        this.indiceNotaSuperior = parseInt(localStorage.getItem("notaMaxima"));
                     else
                         this.indiceNotaSuperior = 25;
 
                     if (localStorage.getItem("tiempo") != null)
-                        this.tiempo = localStorage.getItem("tiempo");
+                        this.tiempo = parseFloat(localStorage.getItem("tiempo"));
                     else
                         this.tiempo = 5;
+                    if (localStorage.getItem("afinacion") != null)
+                        this.afinacion = localStorage.getItem("afinacion");
+                    else
+                        this.afinacion = 13;
                 }
             }
         })
