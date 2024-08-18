@@ -6,22 +6,26 @@
     <meta charset="utf-8">
     <link rel="stylesheet" href="./css/style.css">
     <link rel="shortcut icon" href="#" />
+    <!--     <script src="./js/script.js"></script> -->
 </head>
 
 <body>
+    <header class="cabecera">
+        <h1> ESTUDIO PARA TUBA/TROMPETA</h1>
+    </header>
     <div id="app">
-
-        <!-- HEADER -->
-        <header class="cabecera contenedorFlex">
-            <h1> ESTUDIO PARA TUBA/TROMPETA...</h1>
-            <button class="item" @click="verOpciones=true">OPCIONES</button>
-        </header>
-
-        <!-- BODY -->
         <div class="contenedor">
-            <div class="contenedorFlex">
-                <button v-if="!practicando" class="item" @click="comenzar()">COMENZAR PRACTICA</button>
-                <button v-else class="item" @click="parar()">DETENER PRACTICA</button>
+            <div id="panel" class="contenedorFlex">
+                <select v-model="indiceNotaInferior" name="indiceNotaInferior" id="indiceNotaInferior">
+                </select>
+                <select v-model="indiceNotaSuperior" name="indiceNotaSuperior" id="indiceNotaSuperior">
+                </select>
+                <img class="botoncito item" id="comenzar" @click="comenzar()" src="./img/play.png" alt="" v-if="!practicando">
+                <img class="botoncito item" id="parar" @click="parar()" src="./img/pause.png" alt="" v-else>
+                <div class="slidecontainer item">
+                    <label for="myRange"> Seleccione tiempo:</label>
+                    <input type="range" v-model="tiempo" min="1" max="10" step="0.25" class="slider" id="myRange"> <span> {{tiempo}} s</span>
+                </div>
             </div>
 
             <div id="flip-container" @click="rota()">
@@ -34,41 +38,15 @@
                     </div>
                 </div>
             </div>
-
-            <div class="contenedorFlex" v-if="!practicando">
-                <button class="item" @click="mostrarFicha()">SIGUIENTE NOTA</button>
-            </div>
         </div>
 
-        <!-- MODAL OPCIONES -->
-        <div class="contenedorModal" v-show="verOpciones">
-            <div class="header">
-                <button class="close" @click="verOpciones=false">X</button>
-                <h1>OPCIONES</h1>
-            </div>
-            <div class="contenido">
-                <div class="item">
-                    <span>Establecer Rango: </span>
-                    <span>Mín</span>
-                    <select v-model="indiceNotaInferior" name="indiceNotaInferior" id="indiceNotaInferior"></select>
-                    <span>Máx</span>
-                    <select v-model="indiceNotaSuperior" name="indiceNotaSuperior" id="indiceNotaSuperior"></select>
-                </div>
-                <div class="slidecontainer item">
-                    <label for="myRange"> Seleccione tiempo:</label>
-                    <input type="range" v-model="tiempo" min="1" max="10" step="0.5" class="slider" id="myRange">
-                    <span> {{tiempo}} s</span>
-                </div>
-                <button @click="guardarOpciones()">GUARDAR</button>
-                <button @click="verOpciones=false">CANCELAR</button>
-            </div>
+        <div class="contenedorFlex" v-if="!practicando">
+            <!--  <button class="item" @click="rota()">GIRAR FICHA</button> -->
+            <button class="item" @click="mostrarFicha()">SIGUIENTE NOTA</button>
+            <!--   <a href="./audio.php"> PRUEBAS</a> -->
         </div>
-
-        <!-- FOOTER -->
-        <footer class="footer">Adrian de Haro Ortega. <span class="copyleft"> &copy; </span> Practica trompeta 2020 · Todos los derechos reservados</footer>
-
-
     </div>
+    <footer class="footer">Adrian de Haro Ortega. <span class="copyleft"> &copy; </span> Practique trompeta 2020 · Todos los derechos reservados</footer>
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
     <script>
         var app = new Vue({
@@ -77,9 +55,10 @@
                 practicando: false,
                 caraA: true,
                 id: "",
-                indiceNotaInferior: 1,
-                indiceNotaSuperior: 61,
+                indiceNotaInferior: 11,
+                indiceNotaSuperior: 25,
                 tiempo: 5,
+                tiempo2: 5,
                 listado: [{
                     indice: 1,
                     palabra: 'DO 0',
@@ -386,8 +365,7 @@
                     tipo: 'C6',
                     frecuencia: 1047
                 }, ],
-                ficha: "",
-                verOpciones: true,
+                ficha: ""
             },
             mounted: function() {
                 var sel = document.getElementById('indiceNotaInferior');
@@ -407,8 +385,6 @@
                 });
 
                 this.ficha = this.listado[12];
-                this.verOpciones = false;
-                this.cargarOpciones();
             },
             computed: {
                 tiempoms: function() {
@@ -431,7 +407,7 @@
                 parar: function() {
                     clearInterval(app.id);
                     app.practicando = false;
-                    //alert("Finaliza el ejercicio");
+                    alert("Finaliza el ejercicio");
                 },
                 aleatorio: function() {
                     return Math.floor(Math.random() * (this.indiceNotaSuperior - this.indiceNotaInferior)) + this.indiceNotaInferior;
@@ -466,27 +442,6 @@
                     o1.start(0);
                     tiempoapagado = app.tiempoms * 0.0002;
                     o1.stop(context.currentTime + tiempoapagado);
-                },
-                guardarOpciones: function() {
-                    localStorage.setItem("notaMinima", this.indiceNotaInferior);
-                    localStorage.setItem("notaMaxima", this.indiceNotaSuperior);
-                    localStorage.setItem("tiempo", this.tiempo);
-                },
-                cargarOpciones: function() {
-                    if (localStorage.getItem("notaMinima") != null)
-                        this.indiceNotaInferior = localStorage.getItem("notaMinima");
-                    else
-                        this.indiceNotaInferior = 11;
-
-                    if (localStorage.getItem("notaMaxima") != null)
-                        this.indiceNotaSuperior = localStorage.getItem("notaMaxima");
-                    else
-                        this.indiceNotaSuperior = 25;
-
-                    if (localStorage.getItem("tiempo") != null)
-                        this.tiempo = localStorage.getItem("tiempo");
-                    else
-                        this.tiempo = 5;
                 }
             }
         })
@@ -496,3 +451,21 @@
 </body>
 
 </html>
+<!--/* switch (app.ficha.tipo) { /*NOTAS CON FRECUENCIAS REALES/CORRESPONDIENTES*/ /* case 'C1': frequency = 32.70; break; case 'Cs1': frequency = 34.65; break; case 'D1': frequency = 36.71; break; case 'Eb1': frequency = 38.89; break; case 'E1': frequency
+    = 41.20; break; case 'F1': frequency = 43.65; break; case 'Fs1': frequency = 46.25; break; case 'G1': frequency = 49.00; break; case 'Gs1': frequency = 51.91; break; case 'A1': frequency = 55.00; break; case 'Bb1': frequency = 58.27; break; case 'B1':
+    frequency = 61.74; break; case 'C2': frequency = 65.41; break; case 'Cs2': frequency = 69.30; break; case 'D2': frequency = 73.42; break; case 'Eb2': frequency = 77.78; break; case 'E2': frequency = 82.41; break; case 'F2': frequency = 87.31; break;
+    case 'Fs2': frequency = 92.50; break; case 'G2': frequency = 98.00; break; case 'Gs2': frequency = 103.8; break; case 'A2': frequency = 110.0; break; case 'Bb2': frequency = 116.5; break; case 'B2': frequency = 123.5; break; case 'C3': frequency =
+    130.8; break; case 'Cs3': frequency = 138.6; break; case 'D3': frequency = 146.8; break; case 'Eb3': frequency = 155.6; break; case 'E3': frequency = 164.8; break; case 'F3': frequency = 174.6; break; case 'Fs3': frequency = 185.0; break; case 'G3':
+    frequency = 196.0; break; case 'Gs3': frequency = 207.7; break; case 'A3': frequency = 220.0; break; case 'Bb3': frequency = 233.1; break; case 'B3': frequency = 246.9; break; case 'C4': frequency = 261.6; break; case 'Cs4': frequency = 277.2; break;
+    case 'D4': frequency = 293.7; break; case 'Eb4': frequency = 311.1; break; case 'E4': frequency = 329.6; break; case 'F4': frequency = 349.2; break; case 'Fs4': frequency = 370.0; break; case 'G4': frequency = 392.0; break; case 'Gs4': frequency =
+    415.3; break; case 'A4': frequency = 440.0; break; case 'Bb4': frequency = 466.2; break; case 'B4': frequency = 493.9; break; case 'C5': frequency = 523.3; break; case 'Cs5': frequency = 554.4; break; case 'D5': frequency = 587.3; break; case 'Eb5':
+    frequency = 622.3; break; case 'E5': frequency = 659.3; break; case 'F5': frequency = 698.5; break; case 'Fs5': frequency = 740.0; break; case 'G5': frequency = 784.0; break; case 'Gs5': frequency = 830.6; break; case 'A5': frequency = 880.0; break;
+    case 'Bb5': frequency = 932.3; break; case 'B5': frequency = 987.8; break; /* NOTAS CON FRECUENCIAS DISMINUIDAS 2 SEMITONOS (sI BEMOL) */ /* case 'D3': frequency = 130.8; flag = true; break; case 'Eb3': frequency = 138.6; flag = true; break; case
+    'E3': frequency = 146.8; flag = true; break; case 'F3': frequency = 155.6; flag = true; break; case 'Fs3': case 'Gb3': frequency = 164.8; flag = true; break; case 'G3': frequency = 174.6; flag = true; break; case 'Gs3': case 'Ab3': frequency = 185.0;
+    flag = true; break; case 'A3': frequency = 196.0; flag = true; break; case 'Bb3': frequency = 207.7; flag = true; break; case 'B3': frequency = 220.0; flag = true; break; case 'C4': frequency = 233.1; flag = true; break; case 'Cs4': case 'Db4': frequency
+    = 246.9; flag = true; break; case 'D4': frequency = 261.6; flag = true; break; case 'Ds4': case 'Eb4': frequency = 277.2; flag = true; break; case 'E4': frequency = 293.7; flag = true; break; case 'F4': frequency = 311.1; flag = true; break; case
+    'Fs4': case 'Gb4': frequency = 329.6; flag = true; break; case 'G4': frequency = 349.2; flag = true; break; case 'Gs4': case 'Ab4': frequency = 370.0; flag = true; break; case 'A4': frequency = 392.0; flag = true; break; case 'As4': case 'Bb4': frequency
+    = 415.3; flag = true; break; case 'B4': frequency = 440.0; flag = true; break; case 'C5': frequency = 466.2; flag = true; break; case 'Cs5': case 'Db5': frequency = 493.9; flag = true; break; case 'D5': frequency = 523.3; flag = true; break; case
+    'Ds5': case 'Eb5': frequency = 554.4; flag = true; break; case 'E5': frequency = 587.3; flag = true; break; case 'F5': frequency = 622.3; flag = true; break; case 'Fs5': case 'Gb5': frequency = 659.3; flag = true; break; case 'G5': frequency = 698.5;
+    flag = true; break; case 'Gs5': case 'Ab5': frequency = 740.0; flag = true; break; case 'A5': frequency = 784.0; flag = true; break; case 'As5': case 'Bb5': frequency = 830.6; flag = true; break; case 'B5': frequency = 880.0; flag = true; break; case
+    'C6': frequency = 932.3; flag = true; break; */ /* default: frequency = 10; } */-->
