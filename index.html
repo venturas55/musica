@@ -65,7 +65,8 @@
         </div>
 
         <!-- FOOTER -->
-        <footer class="footer">Adrian de Haro Ortega. <span class="copyleft"> &copy; </span> Practica trompeta 2020 · Todos los derechos reservados</footer>
+        <footer class="footer">Adrian de Haro Ortega. <span class="copyleft"> &copy; </span> Practica trompeta 2020 ·
+            Todos los derechos reservados</footer>
 
 
     </div>
@@ -385,11 +386,13 @@
                     palabra: 'C6',
                     tipo: 'C6',
                     frecuencia: 1047
-                }, ],
+                },],
                 ficha: "",
-                verOpciones: true,
+                verOpciones: false,
+                audioContext: null,
             },
-            mounted: function() {
+            mounted: function () {
+                this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
                 var sel = document.getElementById('indiceNotaInferior');
                 this.listado.forEach(item => {
                     var opt = document.createElement('option');
@@ -407,86 +410,63 @@
                 });
 
                 this.ficha = this.listado[12];
-                this.verOpciones = false;
                 this.cargarOpciones();
             },
             computed: {
-                tiempoms: function() {
+                tiempoms: function () {
                     return this.tiempo * 1000;
                 }
             },
             methods: {
-                mostrarFicha: function() {
+                mostrarFicha: function () {
                     this.ficha = this.listado[this.aleatorio()];
                 },
-                rota: function() {
-                    app.caraA = !app.caraA;
+                rota: function () {
+                    this.caraA = !this.caraA;
                 },
-                comenzar: function() {
-                    app.practicando = true;
-                    app.id = setInterval(function() {
-                            app.rotacion()
-                        }, app.tiempoms) //app.funcion() ha de llevar los PARENTESIS!!!
+                comenzar: function () {
+                    this.practicando = true;
+                    this.id = setInterval(function () {
+                        app.rotacion()
+                    }, this.tiempoms) //this.funcion() ha de llevar los PARENTESIS!!!
                 },
-                parar: function() {
-                    clearInterval(app.id);
-                    app.practicando = false;
+                parar: function () {
+                    clearInterval(this.id);
+                    this.practicando = false;
                     //alert("Finaliza el ejercicio");
                 },
-                aleatorio: function() {
+                aleatorio: function () {
                     return Math.floor(Math.random() * (this.indiceNotaSuperior - this.indiceNotaInferior)) + this.indiceNotaInferior;
                 },
-                rotacion: function() {
-                    id0 = setTimeout(function() {
-                        app.mostrarFicha()
-                    }, app.tiempoms * 0.03); // Añado un retardo al mostrar la nueva ficha, para que no se vea mientras gira por segunda vez
-                    id1 = setTimeout(function() {
-                        app.rota()
-                    }, app.tiempoms * 0.8); //Al 80% del tiempo definido rota una vez
-                    id3 = setTimeout(function() {
-                        app.reproducir()
-                    }, app.tiempoms * 0.8); //Al 80% del tiempo definido empieza a sonar
-                    id2 = setTimeout(function() {
-                        app.rota()
-                    }, app.tiempoms * 0.99); //Al 99% del tiempo definido rota por segunda vez para volver a su estado original
+                rotacion() {
+                    setTimeout(() => this.mostrarFicha(), this.tiempoms * 0.03);
+                    setTimeout(() => this.rota(), this.tiempoms * 0.8);
+                    setTimeout(() => this.reproducir(), this.tiempoms * 0.8);
+                    setTimeout(() => this.rota(), this.tiempoms * 0.98);
                 },
 
-                reproducir: function() {
-                    var flag = false;
-
-                    frequency = app.ficha.frecuencia;
-                    console.log("Nota: " + app.ficha.tipo + " " + frequency + "Hz " + flag);
-
-                    var context = new AudioContext();
-                    o1 = context.createOscillator();
-                    g1 = context.createGain();
+                reproducir() {
+                    const o1 = this.audioContext.createOscillator();
+                    const g1 = this.audioContext.createGain();
                     o1.connect(g1);
-                    g1.connect(context.destination);
-                    o1.frequency.value = frequency;
-                    o1.start(0);
-                    tiempoapagado = app.tiempoms * 0.0002;
-                    o1.stop(context.currentTime + tiempoapagado);
+                    g1.connect(this.audioContext.destination);
+                    o1.frequency.value = this.ficha.frecuencia;
+                    o1.start();
+                    o1.stop(this.audioContext.currentTime + (this.tiempoms * 0.0002));
                 },
-                guardarOpciones: function() {
+                guardarOpciones: function () {
                     localStorage.setItem("notaMinima", this.indiceNotaInferior);
                     localStorage.setItem("notaMaxima", this.indiceNotaSuperior);
                     localStorage.setItem("tiempo", this.tiempo);
+                    this.verOpciones = false;
                 },
-                cargarOpciones: function() {
+                cargarOpciones: function () {
                     if (localStorage.getItem("notaMinima") != null)
-                        this.indiceNotaInferior = localStorage.getItem("notaMinima");
-                    else
-                        this.indiceNotaInferior = 11;
-
+                        this.indiceNotaInferior = parseInt(localStorage.getItem("notaMinima")) || 11;
                     if (localStorage.getItem("notaMaxima") != null)
-                        this.indiceNotaSuperior = localStorage.getItem("notaMaxima");
-                    else
-                        this.indiceNotaSuperior = 25;
-
+                        this.indiceNotaSuperior = parseInt(localStorage.getItem("notaMaxima")) || 25;
                     if (localStorage.getItem("tiempo") != null)
-                        this.tiempo = localStorage.getItem("tiempo");
-                    else
-                        this.tiempo = 5;
+                        this.tiempo = parseFloat(localStorage.getItem("tiempo")) || 5;
                 }
             }
         })
